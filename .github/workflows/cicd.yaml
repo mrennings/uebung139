@@ -38,9 +38,10 @@ jobs:
           terraform version
           terraform -chdir=./infra init
           terraform -chdir=./infra apply -auto-approve
-          echo "BUCKET=$(terraform -chdir=./infra output -raw bucketname)"
-          echo "BUCKET=$(terraform -chdir=./infra output -raw bucketname)" >> $GITHUB_OUTPUT
+        # echo "BUCKET=$(terraform -chdir=./infra output -raw bucketname)"
+        # echo "BUCKET=$(terraform -chdir=./infra output -raw bucketname)" >> $GITHUB_OUTPUT
       - name: Push to S3
         run: |
           echo "${{ steps.get-S3-bucket.outputs.BUCKET }}"
-          aws --profile sandbox s3 sync --region=eu-central-1 ./build s3://${{ steps.get-S3-bucket.outputs.BUCKET }}/
+          aws --profile sandbox s3 sync --region=eu-central-1 ./build s3://$(terraform -chdir=./infra output -raw bucketname)/
+        #aws --profile sandbox s3 sync --region=eu-central-1 ./build s3://${{ steps.get-S3-bucket.outputs.BUCKET }}/
