@@ -32,12 +32,14 @@ jobs:
       #- run: cat ~/.aws/credentials
       - run: aws configure list-profiles
       - uses: hashicorp/setup-terraform@v2
-      - run: terraform version
-      - run: terraform -chdir=./infra init
-      - run: terraform -chdir=./infra apply -auto-approve
-      - id: get-S3-bucket
-        #run: echo "BUCKET=$(terraform -chdir=./infra output -raw bucketname)" >> $GITHUB_OUTPUT
-        run: echo "::set-output name=BUCKET::$(terraform output -raw bucketname)"
+      - name: Setting up infra
+        id: get-S3-bucket
+        run: |
+          terraform version
+          terraform -chdir=./infra init
+          terraform -chdir=./infra apply -auto-approve
+          echo "BUCKET=$(terraform -chdir=./infra output -raw bucketname)"
+          echo "BUCKET=$(terraform -chdir=./infra output -raw bucketname)" >> $GITHUB_OUTPUT
       - name: Push to S3
         run: |
           echo "${{ steps.get-S3-bucket.outputs.BUCKET }}"
