@@ -13,7 +13,7 @@ terraform {
     key            = "state/terraform.tfstate"
     region         = "eu-central-1"
     encrypt        = true
-    dynamodb_table = "u139remstate"
+    #dynamodb_table = "u139remstate"
     profile        = "sandbox"
   }
 }
