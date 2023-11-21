@@ -36,4 +36,4 @@ jobs:
       - run: terraform -chdir=./infra init
       - run: terraform -chdir=./infra validate
       - run: terraform -chdir=./infra apply -auto-approve
-      - run: aws --profile sandbox s3 sync ./build s3://my-website-bucket-234808sfdblah/
+      - run: aws --profile sandbox s3 sync --region=eu-central-1 ./build s3://my-website-bucket-234808sfdblah/
