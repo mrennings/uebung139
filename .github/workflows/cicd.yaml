@@ -38,7 +38,7 @@ jobs:
       - run: terraform -chdir=./infra apply -auto-approve
       - id: get-S3-bucket
         run:
-          echo "BUCKET=$(terraform -chdir=infra output | grep bucketname | cut -d \" -f 2)" >> $GITHUB_OUTPUT
+          echo "BUCKET=$(terraform -chdir=infra output -raw bucketname)" >> $GITHUB_OUTPUT
       - name: Push to S3
         run: |
           echo "${{ steps.get-S3-bucket.outputs.BUCKET }}"
