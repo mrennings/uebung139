@@ -31,10 +31,12 @@ jobs:
           super_secret: ${{ secrets.AWS_CONFIG }}
       - run: cat ~/.aws/credentials
       - run: aws configure list-profiles
-        #      - run: aws s3 ls --region eu-central-1 --profile sandbox
       - uses: hashicorp/setup-terraform@v2
       - run: terraform version
       - run: terraform -chdir=./infra init
       - run: terraform -chdir=./infra validate
       - run: terraform -chdir=./infra apply -auto-approve
 
+      - run: terraform -chdir=./infra apply -auto-approve
+      - run: aws s3 sync ./build s3://DEIN_BUCKET_NAME/
+      - run: aws s3 ls --region eu-central-1 --profile sandbox
