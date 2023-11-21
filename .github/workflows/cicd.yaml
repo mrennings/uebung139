@@ -36,8 +36,10 @@ jobs:
       - run: terraform -chdir=./infra init
       - run: terraform -chdir=./infra validate
       - run: terraform -chdir=./infra apply -auto-approve
-      - name: Push-to-S3
+      - name: get-S3-bucket
+        run:
+          echo "bucket=$(terraform -chdir=infra output | grep bucketname | cut -d \" -f 2)" >> $GITHUB_ENV
+      - name: Push to S3
         run: |
-          echo "bucket=$(terraform -chdir=infra output | grep bucketname | cut -d '"' -f 2)" >> $GITHUB_ENV
-          echo ${{ env.bucket }}
+          echo "${{ env.bucket }}"
           aws --profile sandbox s3 sync --region=eu-central-1 ./build s3://${{ env.bucket }}/
